@@ -1,0 +1,72 @@
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  admin:
+    build: ./services/admin
+    ports:
+      - "5006:5006"
+    env_file:
+      - ./services/admin/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  auth:
+    build: ./services/auth
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./services/auth/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  restaurant:
+    build: ./services/restaurant
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./services/restaurant/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  rider:
+    build: ./services/rider
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./services/rider/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  realtime:
+    build: ./services/realtime
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./services/realtime/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  utils:
+    build: ./services/utils
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./services/utils/.env
+    depends_on:
+      - rabbitmq
+    restart: always
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
