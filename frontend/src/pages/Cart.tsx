@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useAppData } from "../context/AppContext";
 import { useState } from "react";
-import type { ICart, IMenuItem, IRestaurant } from "../types";
+import type { ICart, IMenuItem, IStore } from "../types";
 import axios from "axios";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 import toast from "react-hot-toast";
 import { VscLoading } from "react-icons/vsc";
 import { BiMinus, BiPlus } from "react-icons/bi";
@@ -18,13 +18,13 @@ const Cart = () => {
 
   if (!cart || cart.length === 0) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <p className="text-gray-500 text-lg">Your cart is empty</p>
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <p className="text-lg text-gray-500">Your cart is empty</p>
       </div>
     );
   }
 
-  const restaurant = cart[0].restaurantId as IRestaurant;
+  const store = cart[0].storeId as IStore;
 
   const deliveryFee = subTotal < 250 ? 49 : 0;
 
@@ -36,7 +36,7 @@ const Cart = () => {
     try {
       setLoadingItemId(itemId);
       await axios.put(
-        `${restaurantService}/api/cart/inc`,
+        `${storeService}/api/cart/inc`,
         { itemId },
         {
           headers: {
@@ -57,7 +57,7 @@ const Cart = () => {
     try {
       setLoadingItemId(itemId);
       await axios.put(
-        `${restaurantService}/api/cart/dec`,
+        `${storeService}/api/cart/dec`,
         { itemId },
         {
           headers: {
@@ -79,7 +79,7 @@ const Cart = () => {
     if (!confirm) return;
     try {
       setClearingCart(true);
-      await axios.delete(`${restaurantService}/api/cart/clear`, {
+      await axios.delete(`${storeService}/api/cart/clear`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -97,11 +97,16 @@ const Cart = () => {
     navigate("/checkout");
   };
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6 space-y-6">
-      <div className="rounded-xl bg-white p-4 shadow-sm">
-        <h2 className="text-xl font-semibold">{restaurant.name}</h2>
+    <div className="page-shell max-w-5xl space-y-6">
+      <header>
+        <p className="label-caps mb-2">Your bag</p>
+        <h1 className="page-title">Cart</h1>
+      </header>
+
+      <div className="card">
+        <h2 className="text-lg font-semibold text-gray-950">{store.name}</h2>
         <p className="text-sm text-gray-500">
-          {restaurant.autoLocation.formattedAddress}
+          {store.autoLocation.formattedAddress}
         </p>
       </div>
 
@@ -113,7 +118,7 @@ const Cart = () => {
           return (
             <div
               key={item._id}
-              className="flex items-center gap-4 rounded-xl bg-white p-4 shadow-sm"
+              className="card-interactive flex flex-col gap-4 p-4 sm:flex-row sm:items-center"
             >
               <img
                 src={item.image}
@@ -160,7 +165,7 @@ const Cart = () => {
         })}
       </div>
 
-      <div className="rounded-xl bg-white p-4 shadow-sm space-y-3">
+      <div className="card space-y-4">
         <div className="flex justify-between text-sm">
           <span>Total Items</span>
           <span>{quauntity}</span>
@@ -192,17 +197,17 @@ const Cart = () => {
 
         <button
           onClick={checkout}
-          className={`mt-3 w-full rounded-lg bg-[#E23744] py-3 text-sm font-semibold text-white hover:bg-red-800 ${
-            restaurant.isOpen === false ? "opacity-50 cursor-not-allowed" : ""
+          className={`btn-primary mt-3 w-full min-h-11 ${
+            store.isOpen === false ? "opacity-50 cursor-not-allowed" : ""
           }`}
-          disabled={restaurant.isOpen === false}
+          disabled={store.isOpen === false}
         >
-          {restaurant.isOpen === false ? "Restaurant is Closed" : "Proceed to Checkout"}
+          {store.isOpen === false ? "Store is Closed" : "Proceed to Checkout"}
         </button>
 
         <button
           onClick={clearCart}
-          className="mt-3 w-full rounded-lg bg-[#232222] py-3 text-sm font-semibold text-white hover:bg-gray-900 flex justify-center items-center gap-3"
+          className="btn-secondary mt-3 flex min-h-11 w-full items-center justify-center gap-3"
           disabled={clearingCart}
         >
           Clear Cart <TbTrash size={16} />

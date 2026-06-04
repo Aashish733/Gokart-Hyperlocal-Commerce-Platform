@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import {
-  MdRestaurant,
+  MdStore,
   MdDeliveryDining,
   MdPayment,
   MdSecurity
@@ -10,34 +10,34 @@ import { BiTimeFive, BiSupport } from "react-icons/bi";
 const FeaturesSection = () => {
   const features = [
     {
-      icon: <MdRestaurant className="text-4xl text-[#E23744]" />,
-      title: "Wide Restaurant Selection",
-      description: "Choose from 500+ restaurants with diverse cuisines"
+      icon: <MdStore className="text-4xl text-gray-900" />,
+      title: "Wide Store Selection",
+      description: "Choose from 500+ stores across multiple categories"
     },
     {
-      icon: <MdDeliveryDining className="text-4xl text-[#E23744]" />,
+      icon: <MdDeliveryDining className="text-4xl text-gray-900" />,
       title: "Fast Delivery",
       description: "Average delivery time under 30 minutes"
     },
     {
-      icon: <BiTimeFive className="text-4xl text-[#E23744]" />,
+      icon: <BiTimeFive className="text-4xl text-gray-900" />,
       title: "Real-time Tracking",
-      description: "Track your order from restaurant to doorstep"
+      description: "Track your order from store to doorstep"
     },
     {
-      icon: <MdPayment className="text-4xl text-[#E23744]" />,
+      icon: <MdPayment className="text-4xl text-gray-900" />,
       title: "Secure Payments",
       description: "Multiple payment options with 100% security"
     },
     {
-      icon: <BiSupport className="text-4xl text-[#E23744]" />,
+      icon: <BiSupport className="text-4xl text-gray-900" />,
       title: "24/7 Support",
       description: "Round-the-clock customer service"
     },
     {
-      icon: <MdSecurity className="text-4xl text-[#E23744]" />,
+      icon: <MdSecurity className="text-4xl text-gray-900" />,
       title: "Quality Assured",
-      description: "Strict quality checks for all restaurants"
+      description: "Strict quality checks for all stores"
     }
   ];
 
@@ -63,20 +63,20 @@ const FeaturesSection = () => {
   };
 
   return (
-    <div className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="border-t border-gray-200 bg-[#fafafa] py-16 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="mb-12 text-center sm:mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why Choose <span className="text-[#E23744]">Zomato</span>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
+            Why Choose <span className="text-gray-500">Gokart</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We're committed to providing you with the best food delivery experience
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            A modern hyperlocal platform built for speed, clarity, and trust
           </p>
         </motion.div>
 
@@ -85,19 +85,19 @@ const FeaturesSection = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              whileHover={{ y: -5, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
+              whileHover={{ y: -2 }}
+              className="rounded-md border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md sm:p-8"
             >
-              <div className="bg-red-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-md border border-gray-200 bg-gray-50">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 {feature.title}
               </h3>
               <p className="text-gray-600">

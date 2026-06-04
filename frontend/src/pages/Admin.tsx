@@ -1,19 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { adminService } from "../main";
-import AdminRestaurantCard from "../components/AdminRestaurantCard";
+import AdminStoreCard from "../components/AdminStoreCard";
 import RiderAdmin from "../components/RiderAdmin";
 
 const Admin = () => {
-  const [restaurant, setRestaurant] = useState<any[]>([]);
+  const [store, setStore] = useState<any[]>([]);
   const [riders, setRiders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"restaurant" | "rider">("restaurant");
+  const [tab, setTab] = useState<"store" | "rider">("store");
 
   const fetchData = async () => {
     try {
       const { data } = await axios.get(
-        `${adminService}/api/v1/admin/restaurant/pending`,
+        `${adminService}/api/v1/admin/store/pending`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -30,7 +30,7 @@ const Admin = () => {
         }
       );
 
-      setRestaurant(data.restaurants);
+      setStore(data.stores);
       setRiders(response.data.riders);
     } catch (error) {
       console.log(error);
@@ -56,33 +56,33 @@ const Admin = () => {
 
       <div className="flex gap-4">
         <button
-          onClick={() => setTab("restaurant")}
+          onClick={() => setTab("store")}
           className={`px-4 py-2 rounded ${
-            tab === "restaurant" ? "bg-red-500 text-white" : "bg-gray-200"
+            tab === "store" ? "bg-black text-white" : "border border-gray-200 bg-white text-gray-700"
           }`}
         >
-          Restaurant
+          Store
         </button>
 
         <button
           onClick={() => setTab("rider")}
           className={`px-4 py-2 rounded ${
-            tab === "rider" ? "bg-red-500 text-white" : "bg-gray-200"
+            tab === "rider" ? "bg-black text-white" : "border border-gray-200 bg-white text-gray-700"
           }`}
         >
           Riders
         </button>
       </div>
 
-      {tab === "restaurant" && (
+      {tab === "store" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {restaurant.length === 0 ? (
-            <p>No pending restaurants</p>
+          {store.length === 0 ? (
+            <p>No pending stores</p>
           ) : (
-            restaurant.map((r) => (
-              <AdminRestaurantCard
+            store.map((r) => (
+              <AdminStoreCard
                 key={r._id}
-                restaurant={r}
+                store={r}
                 onVerify={fetchData}
               />
             ))

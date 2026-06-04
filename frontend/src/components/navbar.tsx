@@ -26,56 +26,68 @@ const Navbar = () => {
 
     return () => clearTimeout(timer);
   }, [search]);
+
   return (
-    <div className="w-full bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+    <header className="glass-nav sticky top-0 z-50 w-full">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 md:px-8">
         <Link
-          to={"/"}
-          className="text-2xl font-bold text-[#E23744] cursor-pointer"
+          to="/"
+          className="group flex items-center gap-2.5"
         >
-          Gokart
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gray-950 text-sm font-bold text-white shadow-md transition-transform group-hover:scale-105">
+            G
+          </span>
+          <span className="text-xl font-semibold tracking-tight text-gray-950 sm:text-[1.35rem]">
+            Gokart
+          </span>
         </Link>
 
-        <div className="flex items-center gap-4">
-          <Link to={"/cart"} className="relative">
-            <CgShoppingCart className="h-6 w-6 text-[#E23744]" />
-            <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#E23744] text-xs font-semibold text-white">
-              {quauntity}
-            </span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link to="/cart" className="icon-btn relative">
+            <CgShoppingCart className="h-5 w-5" />
+            {quauntity > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-gray-950 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                {quauntity}
+              </span>
+            )}
           </Link>
 
           {isAuth ? (
-            <Link to="/account" className="font-medium text-[#E23744]">
+            <Link to="/account" className="btn-secondary hidden px-4 py-2 sm:inline-flex">
               Account
             </Link>
           ) : (
-            <Link to="/Login" className="font-medium text-[#E23744]">
-              Login
+            <Link to="/login" className="btn-primary px-4 py-2 text-sm">
+              Sign in
             </Link>
           )}
         </div>
       </div>
 
-      {/* search bar */}
       {isHomePage && (
-        <div className="border-t px-4 py-3">
-          <div className="mx-auto flex max-w-7xl items-center rounded-lg border shadow-sm">
-            <div 
+        <div className="border-t border-gray-100/80 px-4 pb-4 pt-3 sm:px-6 md:px-8">
+          <div className="mx-auto flex max-w-7xl items-center overflow-hidden rounded-md border border-gray-200 bg-white/95 shadow-sm backdrop-blur-sm">
+            <button
+              type="button"
               onClick={() => setIsMapOpen(true)}
-              className="flex items-center gap-2 px-3 border-r text-gray-700 cursor-pointer hover:bg-gray-50 transition py-2 self-stretch"
-              title="Click to change location"
+              className="flex min-h-12 items-center gap-2 border-r border-gray-100 px-4 py-2.5 transition hover:bg-gray-50"
+              title="Change location"
             >
-              <BiMapPin className="h-4 w-4 text-[#E23744] shrink-0" />
-              <span className="text-sm truncate max-w-35 font-medium">{city}</span>
-            </div>
-            <div className="flex flex-1 items-center gap-2 px-3">
-              <BiSearch className="h-4 w-4 text-gray-400" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100">
+                <BiMapPin className="h-4 w-4 text-gray-800" />
+              </span>
+              <span className="max-w-[7rem] truncate text-left text-sm font-medium text-gray-800 sm:max-w-[10rem]">
+                {city || "Set location"}
+              </span>
+            </button>
+            <div className="flex min-h-12 flex-1 items-center gap-3 px-4">
+              <BiSearch className="h-4 w-4 shrink-0 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search for restaurant"
+                placeholder="Search stores, cuisines, brands..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full py-2 text-sm outline-none"
+                className="w-full bg-transparent py-2 text-sm text-gray-900 outline-none placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -96,7 +108,7 @@ const Navbar = () => {
           setCity(cityName);
         }}
       />
-    </div>
+    </header>
   );
 };
 

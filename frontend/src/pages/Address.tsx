@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 import L from "leaflet";
 import { LuLocateFixed } from "react-icons/lu";
 import { BiLoader, BiPlus, BiTrash } from "react-icons/bi";
@@ -103,7 +103,7 @@ const AddAddressPage = () => {
   // 📡 Fetch addresses
   const fetchAddresses = async () => {
     try {
-      const { data } = await axios.get(`${restaurantService}/api/address/all`, {
+      const { data } = await axios.get(`${storeService}/api/address/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -132,7 +132,7 @@ const AddAddressPage = () => {
     try {
       setAdding(true);
       await axios.post(
-        `${restaurantService}/api/address/new`,
+        `${storeService}/api/address/new`,
         {
           formattedAddress,
           mobile,
@@ -163,7 +163,7 @@ const AddAddressPage = () => {
     if (!window.confirm("Delete this address?")) return;
     try {
       setDeletingId(id);
-      await axios.delete(`${restaurantService}/api/address/${id}`, {
+      await axios.delete(`${storeService}/api/address/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -218,10 +218,7 @@ href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       <button
         disabled={adding}
         onClick={addAddress}
-        className="flex items-center justify-center gap-2 rounded-lg
-
-bg-[#E23744] px-4 py-3 text-white hover:bg-[#d32f3a] disabled:opacity-
-50"
+        className="btn-primary flex w-full items-center justify-center gap-2"
       >
         {adding ? <BiLoader className="animate-spin" /> : <BiPlus />}
         Save Address
@@ -257,8 +254,7 @@ medium"
               <button
                 onClick={() => deleteAddress(addr._id)}
                 disabled={deletingId === addr._id}
-                className="rounded-lg p-2 text-red-500 hover:bg-red-50
-disabled:opacity-50"
+                className="rounded-md p-2 text-gray-600 hover:bg-gray-100 disabled:opacity-50"
               >
                 {deletingId === addr._id ? (
                   <BiLoader size={16} className="animate-spin" />

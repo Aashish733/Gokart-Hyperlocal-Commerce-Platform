@@ -70,7 +70,7 @@ const LocateMe = ({ onLocate }: { onLocate: (lat: number, lng: number) => void }
   return (
     <button
       onClick={handleLocate}
-      className="absolute bottom-4 right-4 z-1000 flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-lg border hover:bg-gray-100 hover:text-[#E23744] transition-all"
+      className="absolute bottom-4 right-4 z-1000 flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-lg transition-all hover:border-black hover:text-black"
       title="Use Current Location"
     >
       <BiTargetLock size={22} className="animate-pulse" />
@@ -187,7 +187,7 @@ export default function LocationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-end justify-center p-0 sm:items-center sm:p-4">
       {/* Background Overlay */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -195,12 +195,12 @@ export default function LocationModal({
       />
 
       {/* Modal Container */}
-      <div className="relative flex h-[90vh] max-h-[600px] w-full max-w-2xl flex-col rounded-2xl bg-white shadow-2xl overflow-hidden transition-all duration-300 transform scale-100">
+      <div className="card-elevated relative flex max-h-[min(92vh,600px)] h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-md p-0 transition-all duration-300 sm:h-[92vh] sm:max-h-[600px] sm:rounded-md">
         
         {/* Header */}
         <div className="flex items-center justify-between border-b px-6 py-4">
           <div className="flex items-center gap-2">
-            <BiMapPin className="text-[#E23744] h-5 w-5" />
+            <BiMapPin className="h-5 w-5 text-gray-900" />
             <h2 className="text-lg font-semibold text-gray-800">
               Select Location on Map
             </h2>
@@ -222,14 +222,14 @@ export default function LocationModal({
                 placeholder="Search for your street, city, or area..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-2 text-sm outline-none focus:border-[#E23744] focus:ring-1 focus:ring-[#E23744] bg-white transition"
+                className="w-full rounded-md border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm outline-none transition focus:border-black"
               />
               <BiSearch className="absolute left-3.5 top-2.5 text-gray-400 h-4.5 w-4.5" />
             </div>
             <button
               type="submit"
               disabled={searching}
-              className="rounded-lg bg-[#E23744] px-4 py-2 text-sm font-semibold text-white hover:bg-[#c12e3a] disabled:opacity-50 transition"
+              className="btn-primary shrink-0"
             >
               {searching ? "Searching..." : "Search"}
             </button>
@@ -288,7 +288,7 @@ export default function LocationModal({
             <div className="mt-1 flex items-start justify-center sm:justify-start gap-2">
               {loading ? (
                 <div className="flex items-center gap-1.5 text-sm text-gray-400 py-1">
-                  <BiLoaderAlt className="animate-spin text-[#E23744]" />
+                  <BiLoaderAlt className="animate-spin text-gray-900" />
                   <span>Fetching address details...</span>
                 </div>
               ) : (
@@ -301,7 +301,7 @@ export default function LocationModal({
           <button
             onClick={handleConfirm}
             disabled={loading || !address}
-            className="w-full sm:w-auto rounded-lg bg-[#E23744] hover:bg-[#c12e3a] px-6 py-3 text-sm font-semibold text-white shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="btn-primary w-full sm:w-auto min-h-11 px-6"
           >
             Confirm Location
           </button>

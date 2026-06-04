@@ -1,12 +1,30 @@
 import { useSearchParams } from "react-router-dom";
 import { useAppData } from "../context/AppContext";
 import { useEffect, useState } from "react";
-import type { IRestaurant } from "../types";
+import type { IStore } from "../types";
 import axios from "axios";
-import { restaurantService } from "../main";
-import RestaurantCard from "../components/RestaurantCard";
+import { storeService } from "../main";
+import StoreCard from "../components/StoreCard";
 import LocationModal from "../components/LocationModal";
 import { BiMapPin } from "react-icons/bi";
+
+const CATEGORIES = [
+  { id: "food", label: "Food" },
+  { id: "grocery", label: "Grocery" },
+  { id: "utensils", label: "Utensils" },
+  { id: "clothes", label: "Fashion" },
+  { id: "electronics", label: "Tech" },
+];
+
+const StoreSkeleton = () => (
+  <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-sm">
+    <div className="skeleton aspect-[4/3] w-full rounded-none" />
+    <div className="space-y-2 p-4">
+      <div className="skeleton h-4 w-3/4" />
+      <div className="skeleton h-3 w-1/2" />
+    </div>
+  </div>
+);
 
 const Home = () => {
   const { location, loadingLocation, setLocation, setCity } = useAppData();
@@ -14,8 +32,9 @@ const Home = () => {
   const [isMapOpen, setIsMapOpen] = useState(false);
 
   const search = searchParams.get("search") || "";
+  const [serviceType, setServiceType] = useState<string>("food");
 
-  const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);
+  const [stores, setStores] = useState<IStore[]>([]);
   const [loading, setLoading] = useState(true);
 
   const getDistanceKm = (
@@ -39,7 +58,7 @@ const Home = () => {
     return +(R * c).toFixed(2);
   };
 
-  const fetchRestaurants = async () => {
+  const fetchStores = async () => {
     if (!location?.latitude || !location?.longitude) {
       return;
     }
@@ -47,21 +66,19 @@ const Home = () => {
     try {
       setLoading(true);
 
-      const { data } = await axios.get(
-        `${restaurantService}/api/restaurant/all`,
-        {
-          params: {
-            latitude: location.latitude,
-            longitude: location.longitude,
-            search,
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const { data } = await axios.get(`${storeService}/api/store/all`, {
+        params: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          search,
+          serviceType,
+        },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-      setRestaurants(data.restaurants ?? []);
+      setStores(data.stores ?? []);
     } catch (error) {
       console.log(error);
     } finally {
@@ -70,35 +87,34 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchRestaurants();
-  }, [location, search]);
+    fetchStores();
+  }, [location, search, serviceType]);
 
   if (loadingLocation) {
     return (
-      <div className="flex h-[60vh] flex-col items-center justify-center gap-3">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#E23744] border-t-transparent"></div>
-        <p className="text-gray-500 font-medium">Detecting your location...</p>
+      <div className="flex min-h-[55vh] flex-col items-center justify-center gap-4 px-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-gray-200 border-t-gray-950" />
+        <p className="text-sm font-medium text-gray-500">Finding your location…</p>
       </div>
     );
   }
 
   if (!location) {
     return (
-      <div className="flex h-[60vh] flex-col items-center justify-center text-center px-4 max-w-md mx-auto space-y-6">
-        <div className="rounded-full bg-red-50 p-5 text-[#E23744] shadow-inner">
-          <BiMapPin size={42} className="animate-bounce" />
+      <div className="page-shell flex min-h-[55vh] flex-col items-center justify-center text-center">
+        <div className="card-elevated mb-8 flex h-20 w-20 items-center justify-center rounded-2xl">
+          <BiMapPin size={36} className="text-gray-800" />
         </div>
-        <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Location Access Required</h2>
-          <p className="text-sm text-gray-500 leading-relaxed">
-            We need your delivery location to show you restaurants and delivery options available in your area.
-          </p>
-        </div>
+        <h2 className="page-title">Where should we deliver?</h2>
+        <p className="page-subtitle mx-auto mt-2 max-w-sm">
+          Set your location once to unlock stores, delivery times, and checkout in
+          your area.
+        </p>
         <button
           onClick={() => setIsMapOpen(true)}
-          className="rounded-xl bg-[#E23744] hover:bg-[#c12e3a] text-white px-6 py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all w-full"
+          className="btn-primary mt-8 min-w-[220px]"
         >
-          Set Location Manually
+          Choose location
         </button>
 
         <LocationModal
@@ -117,42 +133,73 @@ const Home = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <p className="text-gray-500">Finding restaurants near you...</p>
-      </div>
-    );
-  }
+  const activeLabel =
+    CATEGORIES.find((c) => c.id === serviceType)?.label ?? "Stores";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      {restaurants.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-          {restaurants.map((res) => {
-            const [resLng, resLat] = res.autoLocation.coordinates;
+    <div className="page-shell">
+      <header className="mb-8">
+        <p className="label-caps mb-2">Deliver to you</p>
+        <h1 className="page-title">Explore nearby</h1>
+        <p className="page-subtitle">
+          Curated {activeLabel.toLowerCase()} stores — fast delivery, transparent pricing.
+        </p>
+      </header>
 
-            const distance = getDistanceKm(
-              location.latitude,
-              location.longitude,
-              resLat,
-              resLng
-            );
+      <div className="scrollbar-hide -mx-1 mb-8 flex gap-2 overflow-x-auto px-1 pb-1">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat.id}
+            type="button"
+            onClick={() => setServiceType(cat.id)}
+            className={serviceType === cat.id ? "chip-active" : "chip"}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
 
-            return (
-              <RestaurantCard
-                key={res._id}
-                id={res._id}
-                name={res.name}
-                image={res.image ?? ""}
-                distance={`${distance}`}
-                isOpen={res.isOpen}
-              />
-            );
-          })}
+      {loading ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <StoreSkeleton key={i} />
+          ))}
         </div>
+      ) : stores.length > 0 ? (
+        <>
+          <p className="label-caps mb-4">
+            {stores.length} {stores.length === 1 ? "store" : "stores"} available
+          </p>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {stores.map((res) => {
+              const [resLng, resLat] = res.autoLocation.coordinates;
+              const distance = getDistanceKm(
+                location.latitude,
+                location.longitude,
+                resLat,
+                resLng
+              );
+
+              return (
+                <StoreCard
+                  key={res._id}
+                  id={res._id}
+                  name={res.name}
+                  image={res.image ?? ""}
+                  distance={`${distance}`}
+                  isOpen={res.isOpen}
+                />
+              );
+            })}
+          </div>
+        </>
       ) : (
-        <p className="text-center text-gray-500">No restaurant found</p>
+        <div className="card-elevated mx-auto max-w-md py-16 text-center">
+          <p className="text-lg font-semibold text-gray-950">No stores yet</p>
+          <p className="mt-2 text-sm text-gray-500">
+            Try another category or update your search — new partners join daily.
+          </p>
+        </div>
       )}
     </div>
   );

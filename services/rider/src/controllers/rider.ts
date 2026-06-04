@@ -36,12 +36,23 @@ export const addRiderProfile = TryCatch(
       });
     }
 
-    const { data: uploadResult } = await axios.post(
-      `${process.env.UTILS_SERVICE}/api/upload`,
-      {
-        buffer: fileBuffer.content,
-      }
-    );
+    let uploadResult: { url: string };
+    try {
+      const { data } = await axios.post(
+        `${process.env.UTILS_SERVICE}/api/upload`,
+        {
+          buffer: fileBuffer.content,
+        }
+      );
+      uploadResult = data;
+    } catch (uploadError: any) {
+      console.error("Rider image upload failed:", uploadError.message);
+      return res.status(502).json({
+        message:
+          uploadError.response?.data?.message ||
+          "Image upload failed. Ensure utils service is running and Cloudinary is configured.",
+      });
+    }
 
     const {
       phoneNumber,
@@ -191,7 +202,7 @@ export const acceptOrder = TryCatch(async (req: AuthenticatedRequest, res) => {
 
   try {
     const { data } = await axios.put(
-      `${process.env.RESTAURANT_SERVICE}/api/order/assign/rider`,
+      `${process.env.STORE_SERVICE}/api/order/assign/rider`,
       {
         orderId,
         riderId: rider._id.toString(),
@@ -230,23 +241,26 @@ export const fetchMyCurrentOrder = TryCatch(
     const riderUserId = req.user?._id;
 
     if (!riderUserId) {
-      return res.status(400).json({
-        message: "Please Login",
+      return res.status(401).json({
+        message: "Please login",
       });
     }
 
-    const rider = await Rider.findOne({
-      userId: riderUserId,
-      isVerified: true,
-    });
+    const rider = await Rider.findOne({ userId: riderUserId });
 
     if (!rider) {
-      return res.status(404).json({ message: "rider not found" });
+      return res.json({ order: null });
+    }
+
+    if (!process.env.STORE_SERVICE || !process.env.INTERNAL_SERVICE_KEY) {
+      return res.status(500).json({
+        message: "Server misconfiguration: STORE_SERVICE or INTERNAL_SERVICE_KEY missing",
+      });
     }
 
     try {
       const { data } = await axios.get(
-        `${process.env.RESTAURANT_SERVICE}/api/order/current/rider?riderId=${rider._id}`,
+        `${process.env.STORE_SERVICE}/api/order/current/rider?riderId=${rider._id}`,
         {
           headers: {
             "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
@@ -255,11 +269,95 @@ export const fetchMyCurrentOrder = TryCatch(
       );
 
       res.json({
-        order: data,
+        order: data ?? null,
       });
     } catch (error: any) {
-      res.status(500).json({
-        message: error.response.data.message,
+      const status = error.response?.status;
+      if (status === 404) {
+        return res.json({ order: null });
+      }
+      console.error("fetchMyCurrentOrder store error:", error.message);
+      return res.status(502).json({
+        message:
+          error.response?.data?.message ||
+          "Could not fetch current order from store service",
+      });
+    }
+  }
+);
+
+const getRiderForUser = async (userId: string) => {
+  return Rider.findOne({ userId });
+};
+
+const storeHeaders = () => ({
+  headers: {
+    "x-internal-key": process.env.INTERNAL_SERVICE_KEY as string,
+  },
+});
+
+export const fetchRiderDashboardStats = TryCatch(
+  async (req: AuthenticatedRequest, res) => {
+    const rider = await getRiderForUser(req.user?._id as string);
+
+    if (!rider) {
+      return res.json({
+        totalDelivered: 0,
+        totalEarnings: 0,
+        todayEarnings: 0,
+        weekEarnings: 0,
+        monthEarnings: 0,
+        activeDeliveries: 0,
+        totalDistanceKm: 0,
+      });
+    }
+
+    try {
+      const { data } = await axios.get(
+        `${process.env.STORE_SERVICE}/api/order/stats/rider?riderId=${rider._id}`,
+        storeHeaders()
+      );
+      res.json(data);
+    } catch (error: any) {
+      console.error("fetchRiderDashboardStats:", error.message);
+      return res.status(502).json({
+        message: "Could not load dashboard stats",
+      });
+    }
+  }
+);
+
+export const fetchRiderOrderHistory = TryCatch(
+  async (req: AuthenticatedRequest, res) => {
+    const rider = await getRiderForUser(req.user?._id as string);
+
+    if (!rider) {
+      return res.json({
+        orders: [],
+        pagination: { page: 1, limit: 15, total: 0, pages: 1 },
+      });
+    }
+
+    const { page, limit, status } = req.query;
+
+    try {
+      const { data } = await axios.get(
+        `${process.env.STORE_SERVICE}/api/order/history/rider`,
+        {
+          params: {
+            riderId: rider._id,
+            page,
+            limit,
+            status: status || "delivered",
+          },
+          ...storeHeaders(),
+        }
+      );
+      res.json(data);
+    } catch (error: any) {
+      console.error("fetchRiderOrderHistory:", error.message);
+      return res.status(502).json({
+        message: "Could not load order history",
       });
     }
   }
@@ -287,7 +385,7 @@ export const updateOrderStatus = TryCatch(
 
     try {
       const { data } = await axios.put(
-        `${process.env.RESTAURANT_SERVICE}/api/order/update/status/rider`,
+        `${process.env.STORE_SERVICE}/api/order/update/status/rider`,
         { orderId },
         {
           headers: {

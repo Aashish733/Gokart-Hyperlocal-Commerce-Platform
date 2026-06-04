@@ -1,18 +1,18 @@
 import { ObjectId } from "mongodb";
 import TryCatch from "../middlewares/trycatch.js";
 import {
-  getRestaurantCollection,
+  getStoreCollection,
   getRiderCollection,
 } from "../util/collection.js";
 
-export const getPendingRestaurant = TryCatch(async (req, res) => {
-  const restaurants = await (await getRestaurantCollection())
+export const getPendingStore = TryCatch(async (req, res) => {
+  const stores = await (await getStoreCollection())
     .find({ isVerified: false })
     .toArray();
 
   res.json({
-    count: restaurants.length,
-    restaurants,
+    count: stores.length,
+    stores,
   });
 });
 
@@ -27,12 +27,12 @@ export const getPendingRiders = TryCatch(async (req, res) => {
   });
 });
 
-export const verifyRestaurant = TryCatch(async (req, res) => {
+export const verifyStore = TryCatch(async (req, res) => {
   const { id } = req.params;
 
   if (typeof id !== "string") {
     return res.status(400).json({
-      message: "invalid restaurant id",
+      message: "invalid store id",
     });
   }
 
@@ -43,7 +43,7 @@ export const verifyRestaurant = TryCatch(async (req, res) => {
   }
 
   const result = await (
-    await getRestaurantCollection()
+    await getStoreCollection()
   ).updateOne(
     { _id: new ObjectId(id) },
     {
@@ -56,12 +56,12 @@ export const verifyRestaurant = TryCatch(async (req, res) => {
 
   if (result.matchedCount === 0) {
     return res.status(404).json({
-      message: "Restaurant not found",
+      message: "Store not found",
     });
   }
 
   res.json({
-    message: "Restaurant verified successfully",
+    message: "Store verified successfully",
   });
 });
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 import toast from "react-hot-toast";
 import { BiUpload } from "react-icons/bi";
 
@@ -33,7 +33,7 @@ const AddMenuItem = ({ onItemAdded }: { onItemAdded: () => void }) => {
 
     try {
       setLoading(true);
-      await axios.post(`${restaurantService}/api/item/new`, formData, {
+      await axios.post(`${storeService}/api/item/new`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -50,32 +50,32 @@ const AddMenuItem = ({ onItemAdded }: { onItemAdded: () => void }) => {
     }
   };
   return (
-    <div className="max-w-md space-y-4 m-auto">
-      <h2 className="text-lg font-semibold">Add Menu Item</h2>
+    <div className="mx-auto max-w-md space-y-4">
+      <h2 className="text-lg font-semibold text-gray-950">Add menu item</h2>
       <input
         type="text"
         placeholder="Item name"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="w-full rounded-lg border px-4 py-2 text-sm outline-none"
+        className="input-field !mt-0"
       />
       <textarea
         placeholder="Item description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="w-full rounded-lg border px-4 py-2 text-sm outline-none"
+        className="input-field !mt-0 min-h-[80px] resize-y"
       />
       <input
         type="number"
-        placeholder="price ₹"
+        placeholder="Price (₹)"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
-        className="w-full rounded-lg border px-4 py-2 text-sm outline-none"
+        className="input-field !mt-0"
       />
 
-      <label className="flex cursor-pointer items-center gap-3 rounded-lg border p-4 text-sm text-gray-600 hover:bg-gray-50">
-        <BiUpload className="h-5 w-5 text-red-500" />
-        {image ? image.name : "Upload restaurant image"}
+      <label className="flex cursor-pointer items-center gap-3 rounded-md border border-gray-200 p-4 text-sm text-gray-600 transition hover:border-gray-900 hover:bg-gray-50">
+        <BiUpload className="h-5 w-5 text-gray-700" />
+        {image ? image.name : "Upload store image"}
         <input
           type="file"
           accept="image/*"
@@ -87,7 +87,7 @@ const AddMenuItem = ({ onItemAdded }: { onItemAdded: () => void }) => {
       <button
         disabled={loading}
         onClick={handleSubmit}
-        className="w-full rounded-lg text-white text-sm py-3 font-semibold transition bg-red-500 cursor-pointer"
+        className="btn-primary w-full cursor-pointer"
       >
         {loading ? "Adding..." : "Add Item"}
       </button>

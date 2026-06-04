@@ -5,6 +5,8 @@ import {
   addRiderProfile,
   fetchMyCurrentOrder,
   fetchMyProfile,
+  fetchRiderDashboardStats,
+  fetchRiderOrderHistory,
   toggleRiderAvailablity,
   updateOrderStatus,
 } from "../controllers/rider.js";
@@ -18,6 +20,8 @@ router.get("/myprofile", isAuth, fetchMyProfile);
 router.patch("/toggle", isAuth, toggleRiderAvailablity);
 router.post("/accept/:orderId", isAuth, acceptOrder);
 router.get("/order/current", isAuth, fetchMyCurrentOrder);
+router.get("/orders/history", isAuth, fetchRiderOrderHistory);
+router.get("/dashboard/stats", isAuth, fetchRiderDashboardStats);
 router.put("/order/update/:orderId", isAuth, updateOrderStatus);
 
 export default router;

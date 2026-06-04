@@ -49,13 +49,13 @@ const RiderOrderRequest = ({ orderId, onAccepted }: Props) => {
     }
   };
   return (
-    <div className="rounded-xl bg-white p-4 shadow-sm border border-green-300 space-y-3">
-      <p className="text-center text-xs font-semibold text-red-600">
+    <div className="space-y-3 rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+      <p className="text-center text-xs font-semibold text-gray-700">
         Accept within {secondsLeft}
       </p>
 
-      <p className="text-center text-xs font-semibold text-green-600">
-        New Delivery Request
+      <p className="text-center text-xs font-semibold text-gray-900">
+        New delivery request
       </p>
 
       <p className="text-xs text-gray-600">
@@ -65,7 +65,7 @@ const RiderOrderRequest = ({ orderId, onAccepted }: Props) => {
       <button
         disabled={accepting}
         onClick={acceptOrder}
-        className="w-full rounded-lg bg-green-600 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:opacity-50"
+        className="btn-primary w-full min-h-11 py-2.5"
       >
         {accepting ? "Accepting..." : "Accept order"}
       </button>

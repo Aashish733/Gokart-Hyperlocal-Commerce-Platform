@@ -34,7 +34,7 @@ const SelectRole = () => {
     }
   };
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#FAFAFA] px-4 sm:px-6">
       <div className="w-full max-w-sm space-y-6">
         <h1 className="text-center text-2xl font-bold">Choose your role</h1>
 
@@ -46,8 +46,8 @@ const SelectRole = () => {
               className={`
                     w-full rounded-xl border px-4 py-3 text-sm font-medium capitalize transition ${
                       role === r
-                        ? "border-[#E23744] bg-[#E23744] text-white"
-                        : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 bg-white text-gray-700 hover:border-black"
                     }
                     `}
             >
@@ -60,8 +60,8 @@ const SelectRole = () => {
           onClick={addRole}
           className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition ${
             role
-              ? "border-[#E23744] bg-[#E23744] text-white hover:bg[#d32f3a]"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              ? "bg-black text-white hover:bg-gray-900"
+              : "cursor-not-allowed bg-gray-200 text-gray-400"
           }`}
         >
           Next

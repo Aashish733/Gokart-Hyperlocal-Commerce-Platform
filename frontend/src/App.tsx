@@ -7,8 +7,8 @@ import SelectRole from "./pages/SelectRole";
 import Navbar from "./components/navbar";
 import Account from "./pages/Account";
 import { useAppData } from "./context/AppContext";
-import Restaurant from "./pages/Restaurant";
-import RestaurantPage from "./pages/RestaurantPage";
+import Store from "./pages/Store";
+import StorePage from "./pages/StorePage";
 import Cart from "./pages/Cart";
 import AddAddressPage from "./pages/Address";
 import Checkout from "./pages/Checkout";
@@ -24,14 +24,18 @@ const App = () => {
 
   if (loading) {
     return (
-      <h1 className="text-2xl font-bold text-red-500 text-center mt-56">
-        Loading...
-      </h1>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-950 text-lg font-bold text-white shadow-lg">
+          G
+        </div>
+        <div className="h-8 w-8 animate-spin rounded-full border-[3px] border-gray-200 border-t-gray-950" />
+        <p className="text-sm font-medium text-gray-500">Loading Gokart…</p>
+      </div>
     );
   }
 
   if (user && user.role === "seller") {
-    return <Restaurant />;
+    return <Store />;
   }
   if (user && user.role === "rider") {
     return <RiderDashboard />;
@@ -59,7 +63,7 @@ const App = () => {
             <Route path="/ordersuccess" element={<OrderSuccess />} />
             <Route path="/address" element={<AddAddressPage />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/restaurant/:id" element={<RestaurantPage />} />
+            <Route path="/store/:id" element={<StorePage />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/select-role" element={<SelectRole />} />
             <Route path="/account" element={<Account />} />

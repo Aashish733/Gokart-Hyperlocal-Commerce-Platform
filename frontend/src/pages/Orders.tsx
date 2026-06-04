@@ -3,7 +3,7 @@ import type { IOrder } from "../types";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import axios from "axios";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 
 const ACTIVE_STATUSES = [
   "placed",
@@ -23,7 +23,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get(
-        `${restaurantService}/api/order/myorder`,
+        `${storeService}/api/order/myorder`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

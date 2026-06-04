@@ -46,8 +46,8 @@ export const initSocket = (server: http.Server) => {
 
     socket.join(`user:${userId}`);
 
-    if (user.restaurantId) {
-      socket.join(`restaurant:${user.restaurantId}`);
+    if (user.storeId) {
+      socket.join(`store:${user.storeId}`);
     }
 
     console.log(`User connected: ${userId}`);

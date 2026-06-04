@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { authService, restaurantService } from "../main";
+import { authService, storeService } from "../main";
 import type { AppContextType, ICart, LocationData, User } from "../types";
 import { Toaster } from "react-hot-toast";
 
@@ -51,7 +51,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   async function fetchCart() {
     if (!user || user.role !== "customer") return;
     try {
-      const { data } = await axios.get(`${restaurantService}/api/cart/all`, {
+      const { data } = await axios.get(`${storeService}/api/cart/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -145,7 +145,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     >
       {children}
 
-      <Toaster />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          className: "!rounded-xl !border !border-gray-200/80 !bg-white !text-gray-900 !text-sm !font-medium !shadow-lg",
+          success: { iconTheme: { primary: "#0a0a0a", secondary: "#fff" } },
+        }}
+      />
     </AppContext.Provider>
   );
 };

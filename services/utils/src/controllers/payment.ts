@@ -9,7 +9,7 @@ export const createRazorpayOrder = async (req: Request, res: Response) => {
     const { orderId } = req.body;
 
     const { data } = await axios.get(
-      `${process.env.RESTAURANT_SERVICE}/api/order/payment/${orderId}`,
+      `${process.env.STORE_SERVICE}/api/order/payment/${orderId}`,
       {
         headers: {
           "x-internal-key": process.env.INTERNAL_SERVICE_KEY,
@@ -77,7 +77,7 @@ export const payWithStripe = async (req: Request, res: Response) => {
     const { orderId } = req.body;
 
     const { data } = await axios.get(
-      `${process.env.RESTAURANT_SERVICE}/api/order/payment/${orderId}`,
+      `${process.env.STORE_SERVICE}/api/order/payment/${orderId}`,
       {
         headers: {
           "x-internal-key": process.env.INTERNAL_SERVICE_KEY,

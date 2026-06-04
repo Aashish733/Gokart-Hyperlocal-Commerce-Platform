@@ -27,10 +27,10 @@ const Footer = () => {
 
         {/* Logo Section */}
         <motion.div variants={item}>
-          <h1 className="text-3xl font-bold text-white mb-4">Zomato</h1>
+          <h1 className="text-3xl font-bold text-white mb-4">Gokart</h1>
           <p className="text-sm leading-relaxed">
             Discover the best food and drinks around you. Order from your
-            favourite restaurants with fast delivery and great taste.
+            favourite stores with fast delivery and great taste.
           </p>
         </motion.div>
 
@@ -42,7 +42,7 @@ const Footer = () => {
               <motion.li
                 key={link}
                 whileHover={{ x: 6 }}
-                className="cursor-pointer hover:text-red-500"
+                className="cursor-pointer transition-colors hover:text-white"
               >
                 {link}
               </motion.li>
@@ -50,20 +50,20 @@ const Footer = () => {
           </ul>
         </motion.div>
 
-        {/* For Restaurants */}
+        {/* For Stores */}
         <motion.div variants={item}>
-          <h3 className="text-white font-semibold mb-4">For Restaurants</h3>
+          <h3 className="text-white font-semibold mb-4">For Stores</h3>
           <ul className="space-y-2">
             {[
               "Partner With Us",
               "Apps For You",
-              "Restaurant Dashboard",
+              "Store Dashboard",
               "Advertise"
             ].map((link) => (
               <motion.li
                 key={link}
                 whileHover={{ x: 6 }}
-                className="cursor-pointer hover:text-red-500"
+                className="cursor-pointer transition-colors hover:text-white"
               >
                 {link}
               </motion.li>
@@ -80,7 +80,7 @@ const Footer = () => {
               (Icon, i) => (
                 <motion.div
                   key={i}
-                  whileHover={{ scale: 1.2, color: "#ef4444" }}
+                  whileHover={{ scale: 1.15, color: "#ffffff" }}
                   className="cursor-pointer"
                 >
                   <Icon />
@@ -90,14 +90,14 @@ const Footer = () => {
           </div>
 
           <p className="text-sm mt-6">
-            Email: support@zomato.com
+            Email: support@gokart.com
           </p>
         </motion.div>
       </div>
 
       {/* Divider */}
       <div className="border-t border-gray-700 mt-10 pt-6 text-center text-sm">
-        © {new Date().getFullYear()} Zomato Clone. All rights reserved.
+        © {new Date().getFullYear()} Gokart. All rights reserved.
       </div>
     </motion.footer>
   );

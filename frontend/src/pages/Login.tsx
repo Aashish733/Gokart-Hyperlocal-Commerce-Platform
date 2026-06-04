@@ -35,8 +35,7 @@ const Login = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
-    // Real-time validation
+
     try {
       const schema = isLogin ? loginSchema : registerSchema;
       const partialData = { ...formData, [name]: value };
@@ -89,8 +88,8 @@ const Login = () => {
   };
 
   const responseGoogle = async (authResult: any) => {
-    setLoading(true);
     try {
+      setLoading(true);
       const result = await axios.post(`${authService}/api/auth/login`, {
         code: authResult["code"],
       });
@@ -115,107 +114,112 @@ const Login = () => {
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-2xl shadow-xl">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold text-[#E23774]">GoKart</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            {isLogin ? "Welcome back! Log in to your account" : "Create an account to get started"}
+    <div className="flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="card-elevated w-full max-w-[420px] p-8 sm:p-10">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-950 text-lg font-bold text-white shadow-lg">
+            G
+          </div>
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-950">
+            {isLogin ? "Welcome back" : "Create your account"}
+          </h1>
+          <p className="mt-2 text-sm text-gray-500">
+            {isLogin
+              ? "Sign in to order from stores near you"
+              : "Join Gokart in under a minute"}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="label-caps">Full name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={`mt-1 block w-full rounded-lg border ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                } px-3 py-2 shadow-sm focus:border-[#E23774] focus:outline-none focus:ring-1 focus:ring-[#E23774]`}
+                className={`input-field ${errors.name ? "input-field-error" : ""}`}
                 placeholder="John Doe"
               />
-              {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+              {errors.name && (
+                <p className="field-error">{errors.name}</p>
+              )}
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email address</label>
+            <label className="label-caps">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              className={`mt-1 block w-full rounded-lg border ${
-                errors.email ? "border-red-500" : "border-gray-300"
-              } px-3 py-2 shadow-sm focus:border-[#E23774] focus:outline-none focus:ring-1 focus:ring-[#E23774]`}
+              className={`input-field ${errors.email ? "input-field-error" : ""}`}
               placeholder="you@example.com"
             />
-            {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+            {errors.email && (
+              <p className="field-error">{errors.email}</p>
+            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="label-caps">Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`mt-1 block w-full rounded-lg border ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              } px-3 py-2 shadow-sm focus:border-[#E23774] focus:outline-none focus:ring-1 focus:ring-[#E23774]`}
+              className={`input-field ${errors.password ? "input-field-error" : ""}`}
               placeholder="••••••••"
             />
-            {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+            {errors.password && (
+              <p className="field-error">{errors.password}</p>
+            )}
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center rounded-lg bg-[#E23774] px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-[#c12e62] focus:outline-none focus:ring-2 focus:ring-[#E23774] focus:ring-offset-2 disabled:opacity-50"
+            className="btn-primary w-full py-3"
           >
-            {loading ? "Processing..." : isLogin ? "Log In" : "Sign Up"}
+            {loading ? "Processing…" : isLogin ? "Sign in" : "Create account"}
           </button>
         </form>
 
-        <div className="relative mt-6">
+        <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300"></div>
+            <div className="w-full border-t border-gray-100" />
           </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          <div className="relative flex justify-center">
+            <span className="bg-white px-3 text-xs font-medium text-gray-400">
+              or continue with
+            </span>
           </div>
         </div>
 
         <button
+          type="button"
           onClick={() => googleLogin()}
           disabled={loading}
-          className="mt-4 flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
+          className="btn-secondary w-full gap-3 py-3"
         >
           <FcGoogle size={20} />
           Google
         </button>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          {isLogin ? "Don't have an account? " : "Already have an account? "}
+        <p className="mt-8 text-center text-sm text-gray-500">
+          {isLogin ? "New to Gokart? " : "Already have an account? "}
           <button
+            type="button"
             onClick={() => {
               setIsLogin(!isLogin);
               setErrors({});
             }}
-            className="font-medium text-[#E23774] hover:text-[#c12e62]"
+            className="font-semibold text-gray-950 underline-offset-4 hover:underline"
           >
-            {isLogin ? "Sign up" : "Log in"}
+            {isLogin ? "Create account" : "Sign in"}
           </button>
-        </p>
-
-        <p className="mt-4 text-center text-xs text-gray-400">
-          By continuing, you agree with our{" "}
-          <span className="text-[#E23774] cursor-pointer">Terms</span> &{" "}
-          <span className="text-[#E23774] cursor-pointer">Privacy</span>
         </p>
       </div>
     </div>

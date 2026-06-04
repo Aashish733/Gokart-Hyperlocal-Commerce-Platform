@@ -36,13 +36,13 @@ const PaymentSuccess = () => {
 
         <div className="space-y-2 pt-2">
           <button
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#e23744] py-3 text-sm font-semibold text-white"
+            className="btn-primary flex w-full items-center justify-center gap-2"
             onClick={() => navigate("/")}
           >
             Order More <BsArrowRight size={16} />
           </button>
           <button
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#e23744] py-3 text-sm font-semibold text-white"
+            className="btn-primary flex w-full items-center justify-center gap-2"
             onClick={() => navigate("/orders")}
           >
             Your orders <BsArrowRight size={16} />

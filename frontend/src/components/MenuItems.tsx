@@ -5,7 +5,7 @@ import { BsCartPlus, BsEye } from "react-icons/bs";
 import { BiTrash } from "react-icons/bi";
 import { VscLoading } from "react-icons/vsc";
 import axios from "axios";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 import toast from "react-hot-toast";
 import { useAppData } from "../context/AppContext";
 
@@ -23,7 +23,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`${restaurantService}/api/item/${itemId}`, {
+      await axios.delete(`${storeService}/api/item/${itemId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -40,7 +40,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
   const toggleAvailiblity = async (itemId: string) => {
     try {
       const { data } = await axios.put(
-        `${restaurantService}/api/item/status/${itemId}`,
+        `${storeService}/api/item/status/${itemId}`,
         {},
         {
           headers: {
@@ -59,14 +59,14 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
 
   const { fetchCart } = useAppData();
 
-  const addToCart = async (restaurantId: string, itemId: string) => {
+  const addToCart = async (storeId: string, itemId: string) => {
     try {
       setLoadingItemId(itemId);
 
       const { data } = await axios.post(
-        `${restaurantService}/api/cart/add`,
+        `${storeService}/api/cart/add`,
         {
-          restaurantId,
+          storeId,
           itemId,
         },
         {
@@ -91,7 +91,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
 
         return (
           <div
-            className={`relative flex gap-4 rounded-lg bg-white p-4 shadow-sm transition ${
+            className={`card-interactive relative flex flex-col gap-3 p-4 sm:flex-row sm:gap-4 ${
               !item.isAvailable ? "opacity-70" : ""
             }`}
             key={item._id}
@@ -100,7 +100,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
               <img
                 src={item.image}
                 alt=""
-                className={`h-20 w-20 rounded object-cover ${
+                className={`h-20 w-20 rounded-xl object-cover ring-1 ring-gray-200/80 ${
                   !item.isAvailable ? "grayscale brightness-75" : ""
                 }`}
               />
@@ -139,7 +139,7 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
 
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                      className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
                     >
                       <BiTrash size={18} />
                     </button>
@@ -149,11 +149,11 @@ const MenuItems = ({ items, onItemDeleted, isSeller }: MenuItemsProps) => {
                 {!isSeller && (
                   <button
                     disabled={!item.isAvailable || isLoading}
-                    onClick={() => addToCart(item.restaurantId, item._id)}
-                    className={`flex items-center justify-center rounded-lg p-2 ${
+                    onClick={() => addToCart(item.storeId, item._id)}
+                    className={`flex min-h-10 min-w-10 items-center justify-center rounded-md p-2 transition ${
                       !item.isAvailable || isLoading
                         ? "cursor-not-allowed text-gray-400"
-                        : "text-red-500 hover:bg-red-50"
+                        : "bg-black text-white hover:bg-gray-900"
                     }`}
                   >
                     {isLoading ? (

@@ -1,10 +1,10 @@
 import { connectDb } from "../config/db.js";
 
-export const getRestaurantCollection = async () => {
+export const getStoreCollection = async () => {
   const db = await connectDb();
   console.log("DB NAME:", db.databaseName);
 
-  return db.collection("restaurants");
+  return db.collection("stores");
 };
 
 export const getRiderCollection = async () => {

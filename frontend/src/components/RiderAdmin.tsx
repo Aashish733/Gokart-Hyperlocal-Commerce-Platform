@@ -20,10 +20,10 @@ const RiderAdmin = ({
           },
         }
       );
-      toast.success("Restaurant verified");
+      toast.success("Store verified");
       onVerify();
     } catch (error) {
-      toast.error("failed ot verify restaurant");
+      toast.error("failed ot verify store");
     }
   };
   return (

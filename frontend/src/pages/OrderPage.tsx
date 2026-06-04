@@ -3,7 +3,7 @@ import { useSocket } from "../context/SocketContext";
 import { useEffect, useState } from "react";
 import type { IOrder } from "../types";
 import axios from "axios";
-import { restaurantService } from "../main";
+import { storeService } from "../main";
 import UserOrderMap from "../components/UserOrderMap";
 
 const OrderPage = () => {
@@ -16,7 +16,7 @@ const OrderPage = () => {
 
   const fetchOrder = async () => {
     try {
-      const { data } = await axios.get(`${restaurantService}/api/order/${id}`, {
+      const { data } = await axios.get(`${storeService}/api/order/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

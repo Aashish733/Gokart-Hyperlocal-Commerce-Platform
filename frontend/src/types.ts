@@ -32,10 +32,11 @@ export interface AppContextType {
   quauntity: number;
 }
 
-export interface IRestaurant {
+export interface IStore {
   _id: string;
   name: string;
   description?: string;
+  serviceType?: 'food' | 'grocery' | 'utensils' | 'clothes' | 'electronics';
   image: string;
   ownerId: string;
   phone: number;
@@ -52,7 +53,7 @@ export interface IRestaurant {
 
 export interface IMenuItem {
   _id: string;
-  restaurantId: string;
+  storeId: string;
   name: string;
   description: string;
   image?: string;
@@ -65,7 +66,7 @@ export interface IMenuItem {
 export interface ICart {
   _id: string;
   userId: string;
-  restaurantId: string | IRestaurant;
+  storeId: string | IStore;
   itemId: string | IMenuItem;
   quauntity: number;
   cretedAt: Date;
@@ -75,8 +76,8 @@ export interface ICart {
 export interface IOrder {
   _id: string;
   userId: string;
-  restaurantId: string;
-  restaurantName: string;
+  storeId: string;
+  storeName: string;
   riderId?: string | null;
   riderPhone: number | null;
   riderName: string | null;
@@ -121,4 +122,21 @@ export interface IOrder {
 
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IRiderDashboardStats {
+  totalDelivered: number;
+  totalEarnings: number;
+  todayEarnings: number;
+  weekEarnings: number;
+  monthEarnings: number;
+  activeDeliveries: number;
+  totalDistanceKm: number;
+}
+
+export interface IRiderOrderPagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
 }

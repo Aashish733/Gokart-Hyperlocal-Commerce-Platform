@@ -23,7 +23,7 @@ export const startOrderReadyConsumer = async () => {
         return;
       }
 
-      const { orderId, restaurantId, location } = event.data;
+      const { orderId, storeId, location } = event.data;
 
       console.log("Searching for rider near:", location);
 
@@ -55,7 +55,7 @@ export const startOrderReadyConsumer = async () => {
             {
               event: "order:available",
               room: `user:${rider.userId}`,
-              payload: { orderId, restaurantId },
+              payload: { orderId, storeId },
             },
             {
               headers: {
